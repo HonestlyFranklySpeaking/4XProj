@@ -3,18 +3,8 @@
 [ext_resource type="Script" uid="uid://deenc18qtywts" path="res://Units/GameUnit.gd" id="1_wtcfe"]
 [ext_resource type="Texture2D" uid="uid://bpd5ue3566t11" path="res://Assets/ground.png" id="2_rqhby"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_j6gvc"]
-size = Vector2(32, 32)
-
 [node name="Node2D" type="Node2D" unique_id=399537045]
 script = ExtResource("1_wtcfe")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1918245243]
 texture = ExtResource("2_rqhby")
-
-[node name="Area2D" type="Area2D" parent="." unique_id=266392963]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=795378098]
-shape = SubResource("RectangleShape2D_j6gvc")
-
-[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]

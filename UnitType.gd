@@ -1,7 +1,7 @@
 class_name UnitType
 extends RefCounted
 
-var position: Vector2i
+var grid_position: Vector2i
 var _health: int
 
 var scene: Node2D
@@ -25,9 +25,13 @@ class OrderStructure:
 
 
 func set_position(to: Vector2i):
-	position = to
+	helpers.units_dict.erase(grid_position)
+	grid_position = to
+	var new_local_position = tile_map.map_to_local(to)
+	print(new_local_position)
 	scene.global_position = tile_map.to_global(tile_map.map_to_local(to))
 	print(scene.global_position)
+	helpers.units_dict[to] = self
 
 func set_health(value: int) -> void:
 	_health = value
