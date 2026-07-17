@@ -8,14 +8,18 @@ var scene: Node2D
 var current_order: OrderStructure = OrderStructure.new()
 var tile_map: TileMapLayer
 
-func _init(using_tilemap: TileMapLayer) -> void:
+func _init(using_tilemap: TileMapLayer, location: Vector2i=Vector2i.ZERO, owner: helpers.UnitOwner=helpers.UnitOwner.OTHER) -> void:
 	set_health(get_base_stats()[4])
 	tile_map = using_tilemap
 	
+	grid_position = location
+
+var owner: helpers.UnitOwner
 
 class OrderStructure:
 	enum OrderType {
 		MOVE,
+		FORTIFY,
 		OTHER,
 	}
 	

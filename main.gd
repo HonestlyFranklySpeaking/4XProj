@@ -22,6 +22,8 @@ func set_mode(mode: Mode):
 		$CanvasLayer/Control/HBoxContainer/Button3.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		$CanvasLayer/Control/HBoxContainer/Button2.visible = true
 		$CanvasLayer/Control/HBoxContainer/Button2.mouse_filter = Control.MOUSE_FILTER_STOP
+		$CanvasLayer/Control/HBoxContainer/FortifyButton.visible = false
+		$CanvasLayer/Control/HBoxContainer/FortifyButton.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		$CanvasLayer/Control/HBoxContainer.unit.current_order.move_sequence = [] as Array[Vector2i]
 		for i in $GridLayers/MovementOverlay.get_children():
 			i.set_num(-1)
@@ -31,6 +33,8 @@ func set_mode(mode: Mode):
 		current_mode = Mode.INSPECT
 		$CanvasLayer/Control/HBoxContainer/Button3.visible = true
 		$CanvasLayer/Control/HBoxContainer/Button3.mouse_filter = Control.MOUSE_FILTER_STOP
+		$CanvasLayer/Control/HBoxContainer/FortifyButton.visible = true
+		$CanvasLayer/Control/HBoxContainer/FortifyButton.mouse_filter = Control.MOUSE_FILTER_STOP
 		$CanvasLayer/Control/HBoxContainer/Button2.visible = false
 		$CanvasLayer/Control/HBoxContainer/Button2.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		$CanvasLayer/Control/HBoxContainer/Button.visible = true
@@ -48,9 +52,16 @@ func set_mode(mode: Mode):
 		$CanvasLayer/Control/HBoxContainer/Button2.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		$CanvasLayer/Control/HBoxContainer/Button.visible = false
 		$CanvasLayer/Control/HBoxContainer/Button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		$CanvasLayer/Control/HBoxContainer/FortifyButton.visible = false
+		$CanvasLayer/Control/HBoxContainer/FortifyButton.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		
 		for i in $GridLayers/MovementOverlay.get_children():
 			i.set_num(-1)
+
+func fortify_pressed(unit: UnitType):
+	print("FORTIFICAZIONE")
+	unit.current_order.type = UnitType.OrderStructure.OrderType.FORTIFY
+	unit.current_order.move_sequence = [] as Array[Vector2i]
 
 func make_move(unit: UnitType):
 	print("move detected")
@@ -73,10 +84,20 @@ func _ready() -> void:
 	set_mode(Mode.DEFAULT)
 	var new_swordsman = SwordfighterType.new($GridLayers/Terrain)
 	$Units.add_child(helpers.spawn_unit_scene(new_swordsman))
+	
+	var newer_swordsman = SwordfighterType.new($GridLayers/Terrain, Vector2i(5, 5))
+	$Units.add_child(helpers.spawn_unit_scene(newer_swordsman))
+	var new = helpers.units_dict
+
+
 	$CanvasLayer/Control/HBoxContainer.set_manipulation_scene(new_swordsman)
+	
 	$CanvasLayer/Control/HBoxContainer.order_given.connect(complete_unit_order)
 	$CanvasLayer/Control/HBoxContainer.move_pressed.connect(make_move)
 	$CanvasLayer/Control/HBoxContainer.all_orders_sent.connect(send_all_orders)
+	$CanvasLayer/Control/HBoxContainer.fortify_pressed.connect(fortify_pressed)
+	
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -102,8 +123,9 @@ func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) 
 			elif current_mode == Mode.DEFAULT:
 				var actual_global_position = get_viewport().canvas_transform.affine_inverse() * event.global_position
 				var move_tile_position = $GridLayers/Terrain.local_to_map($GridLayers/Terrain.to_local(actual_global_position))
-				set_mode(Mode.INSPECT)
-				$CanvasLayer/Control/HBoxContainer.unit = helpers.units_dict[move_tile_position]
+				if move_tile_position in helpers.units_dict.keys():
+					set_mode(Mode.INSPECT)
+					$CanvasLayer/Control/HBoxContainer.unit = helpers.units_dict[move_tile_position]
 			
 
 func _on_movement_overlay_child_entered_tree(node: Node) -> void:

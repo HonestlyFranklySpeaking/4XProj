@@ -1,6 +1,7 @@
 extends Control
 
 signal move_pressed(unit: UnitType)
+signal fortify_pressed(unit: UnitType)
 signal order_given(unit: UnitType)
 signal all_orders_sent
 
@@ -30,3 +31,7 @@ func _on_button_2_pressed() -> void:
 
 func _on_button_3_pressed() -> void:
 	all_orders_sent.emit()
+
+
+func _on_fortify_button_pressed() -> void:
+	fortify_pressed.emit(unit)
