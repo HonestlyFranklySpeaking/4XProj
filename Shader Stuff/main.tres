@@ -1,0 +1,18 @@
+[gd_resource type="VisualShader" format=3 uid="uid://dirb3flu807po"]
+
+[ext_resource type="Script" uid="uid://dr1oj07og8c5c" path="res://Shader Stuff/noise_function.gd" id="1_wafha"]
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_ci82a"]
+constant = 1.0
+
+[sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_clykf"]
+initialized = true
+script = ExtResource("1_wafha")
+
+[resource]
+nodes/vertex/0/position = Vector2(490, 150)
+nodes/fragment/0/position = Vector2(2610, 910)
+nodes/fragment/3/node = SubResource("VisualShaderNodeFloatConstant_ci82a")
+nodes/fragment/3/position = Vector2(2270, 1110)
+nodes/fragment/4/node = SubResource("VisualShaderNodeCustom_clykf")
+nodes/fragment/4/position = Vector2(2270, 920)
